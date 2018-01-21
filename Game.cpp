@@ -68,7 +68,7 @@ void Game::run() {
 								piece.move(Direction::DOWN);
 								distanceCounter++;
 							}
-
+						
 							//Calculate hard-drop score according to the piece position
 							score += 2 * distanceCounter;
 							distanceCounter = 0;
@@ -80,7 +80,7 @@ void Game::run() {
 						}
 						
 						//Place a joker on the board
-						if (dir == Direction::PUT && piece.getType() == Piece::Type::JOKER) {
+						if (dir == Direction::PUT && piece.getType() == TetrisObject::Type::JOKER) {
 							piecesDropped++; 
 							board.update(piece);
 							board.checkFullRow(score);
@@ -95,7 +95,7 @@ void Game::run() {
 			if (board.checkBottomCollision(piece)) { 
 
 				//If a bomb reached the bottom, detonate a 3x3 block (if exists) and remove the bomb off the board
-				if (piece.getType() == Piece::Type::BOMB) {
+				if (piece.getType() == TetrisObject::Type::BOMB) {
 					board.detonate(piece.getBody(0).getX(), piece.getBody(0).getY(), score); 
 					piece.setBody(0, Point(piece.getBody(0).getX(), piece.getBody(0).getY(), ' '));
 				}
@@ -112,7 +112,7 @@ void Game::run() {
 			}
 
 			//Fix joker movement over pieces on the board
-			if (piece.getType() == Piece::Type::JOKER)
+			if (piece.getType() == TetrisObject::Type::JOKER)
 				board.fixJokerMove(piece);
 
 			//Draw the piece while it's moving

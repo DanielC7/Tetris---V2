@@ -24,14 +24,14 @@ void Board::draw() {
 }
 
 //Check if a piece collides with the bottom of the board (meaning the piece can't move down anymore)
-bool Board::checkBottomCollision(Piece piece) {
+bool Board::checkBottomCollision(TetrisObject piece) {
 	for (int i = 0; i < piece.getSize(); i++) {
-		if (piece.getType() == Piece::Type::BOMB) { //If it's a bomb, check if it hits the border or other pieces
+		if (piece.getType() == TetrisObject::Type::BOMB) { //If it's a bomb, check if it hits the border or other pieces
 			if (this->body[piece.getBody(i).getX()][piece.getBody(i).getY()].getCh() == '#')
 				return true;
 			else if (this->body[piece.getBody(i).getX()][piece.getBody(i).getY() + 1].getCh() == '+')
 				return true;
-		} else if (piece.getType() == Piece::Type::JOKER) { //If it's a joker check if it hits the border only, otherwise let it through
+		} else if (piece.getType() == TetrisObject::Type::JOKER) { //If it's a joker check if it hits the border only, otherwise let it through
 			if (this->body[piece.getBody(i).getX()][piece.getBody(i).getY() + 1].getCh() == '+')
 				return true;
 		} else if (this->body[piece.getBody(i).getX()][piece.getBody(i).getY() + 1].getCh() != ' ') //Every other piece can't hit anything 
@@ -41,12 +41,12 @@ bool Board::checkBottomCollision(Piece piece) {
 }
 
 //Update the points on the board when a piece has settled on the board
-void Board::update(Piece piece) {
+void Board::update(TetrisObject piece) {
 	for (int i = 0; i < piece.getSize(); i++) {
 		this->body[piece.getBody(i).getX()][piece.getBody(i).getY()].setPoint(piece.getBody(i).getX(), piece.getBody(i).getY(), piece.getBody(i).getCh(), piece.getBody(i).getColor());
 		
 		//If it's a joker, mark it as a joker for score calculations (in other functions)
-		if (piece.getType() == Piece::Type::JOKER) 
+		if (piece.getType() == TetrisObject::Type::JOKER)
 			this->body[piece.getBody(i).getX()][piece.getBody(i).getY()].setIsJoker(true);
 	}
 
@@ -113,10 +113,10 @@ bool Board::checkGameOver() {
 }
 
 //Check if a piece is not colliding in the side of other pieces on the board
-bool Board::checkSideCollision(Piece piece, int dir) {
+bool Board::checkSideCollision(TetrisObject piece, int dir) {
 
 	//A joker can move over other blocks
-	if (piece.getType() != Piece::Type::JOKER) {
+	if (piece.getType() != TetrisObject::Type::JOKER) {
 		for (int i = 0; i < piece.getSize(); i++) {
 			if ((dir && piece.getBody(i).getCh() == this->body[piece.getBody(i).getX() + 1][piece.getBody(i).getY()].getCh()) ||
 				(!dir && piece.getBody(i).getCh() == this->body[piece.getBody(i).getX() - 1][piece.getBody(i).getY()].getCh()))
@@ -155,7 +155,7 @@ void Board::detonate(int x, int y, int& score) {
 }
 
 //Fix the joker while hovering on other pieces - prints back the original color of the pieces that were under the joker
-void Board::fixJokerMove(Piece piece) {
+void Board::fixJokerMove(TetrisObject piece) {
 	//Get the coordinates of the piece
 	int x = piece.getBody(0).getX();
 	int y = piece.getBody(0).getY();
@@ -193,7 +193,7 @@ bool Board::isRowContainsJoker(int row) {
 }
 
 //Check if the line piece can rotate without heating other pieces on the board
-bool Board::isRotatable(Piece piece) {
+bool Board::isRotatable(TetrisObject piece) {
 	for (int i = 0; i < piece.getSize(); i++) {
 		int newX = -1 * (piece.getBody(i).getY() - piece.getBody(1).getY()) + piece.getBody(1).getX();
 		int newY = 1 * (piece.getBody(i).getX() - piece.getBody(1).getX()) + piece.getBody(1).getY();

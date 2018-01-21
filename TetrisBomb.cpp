@@ -1,0 +1,10 @@
+#include "TetrisBomb.h"
+
+
+//Init a piece
+void TetrisBomb::init() {
+	size = 1;
+	rotates = false;
+	setColor(Color::LIGHTRED);
+	body[0].setPoint(6, 4, '@', color);
+}

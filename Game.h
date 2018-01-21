@@ -2,14 +2,23 @@
 #define _GAME_H_
 
 #include "io_utils.h"
-#include "Piece.h"
 #include "Board.h"
+#include "TetrisObject.h"
+#include "TetrisShape.h"
 
 class Game {
 	enum { NUM_KEYS = 5 };
 
-	Piece piece;
 	Board board;
+	//TetrisObject objects[7];
+
+	//TetrisShape LinePiece, SquarePiece, ZPiece, LPiece, PlusPiece;
+	TetrisShape shapePiece;
+	//TetrisObject piece;
+	//TetrisJoker JokerPiece;
+	//TetrisBomb BombPiece;
+
+	TetrisObject &piece = shapePiece;
 
 	char menuKeys[5];
 	char arrowKeys[5];

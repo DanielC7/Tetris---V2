@@ -1,7 +1,7 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 #include "Point.h"
-#include "Piece.h"
+#include "TetrisObject.h"
 
 class Board {
 	enum { BORDER_WIDTH = 1, OFFSET_TOP = 3 };
@@ -15,11 +15,11 @@ public:
 
 	void draw();
 
-	bool checkBottomCollision(Piece piece);
+	bool checkBottomCollision(TetrisObject piece);
 	
-	bool checkSideCollision(Piece piece, int dir);
+	bool checkSideCollision(TetrisObject piece, int dir);
 	
-	void update(Piece piece);
+	void update(TetrisObject piece);
 	
 	void checkFullRow(int& score);
 	
@@ -29,7 +29,7 @@ public:
 	
 	void detonate(int x, int y, int& score);
 	
-	void fixJokerMove(Piece piece);
+	void fixJokerMove(TetrisObject piece);
 
 	bool isRowContainsJoker(int row);
 	
@@ -40,7 +40,7 @@ public:
 	int getBoardColor(int x, int y) {
 		return body[x][y].getColor();
 	}
-	bool isRotatable(Piece piece);
+	bool isRotatable(TetrisObject piece);
 };
 
 #endif
