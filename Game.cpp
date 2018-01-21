@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 #include "Game.h"
 #include "Board.h"
 #include "Art.h"
@@ -16,7 +17,8 @@ void Game::init() {
 	board.init();
 
 	//Init the first piece
-	piece.init();
+	randObject();
+	piece->init();
 
 	//Draw the board
 	board.draw();
@@ -53,19 +55,19 @@ void Game::run() {
 				if (!isPaused) {
 					if ((dir = getDirection(key)) != -1) {
 						//Move the piece left
-						if (dir == Direction::LEFT && board.checkSideCollision(piece, Direction::LEFT))       
-							piece.move(Direction::LEFT);
+						if (dir == Direction::LEFT && board.checkSideCollision(*piece, Direction::LEFT))       
+							piece->move(Direction::LEFT);
 						
 						//Move the piece right
-						if (dir == Direction::RIGHT && board.checkSideCollision(piece, Direction::RIGHT))     
-							piece.move(Direction::RIGHT);
+						if (dir == Direction::RIGHT && board.checkSideCollision(*piece, Direction::RIGHT))     
+							piece->move(Direction::RIGHT);
 
 						//Drop the piece (Hard drop) 
 						if (dir == Direction::DOWN) {
 
 							//Move the piece down until it collides with the pieces on the board
-							while (!board.checkBottomCollision(piece)) {
-								piece.move(Direction::DOWN);
+							while (!board.checkBottomCollision(*piece)) {
+								piece->move(Direction::DOWN);
 								distanceCounter++;
 							}
 						
@@ -75,36 +77,38 @@ void Game::run() {
 						}
 						
 						//Rotate the piece - exclude rotation only for line
-						if (dir == Direction::ROTATE && piece.getRotatability() && board.isRotatable(piece)) {
-							piece.rotate();
+						if (dir == Direction::ROTATE && piece->getRotatability() && board.isRotatable(*piece)) {
+							piece->rotate();
 						}
 						
 						//Place a joker on the board
-						if (dir == Direction::PUT && piece.getType() == TetrisObject::Type::JOKER) {
+						if (dir == Direction::PUT && piece->getType() == TetrisObject::Type::JOKER) {
 							piecesDropped++; 
-							board.update(piece);
+							board.update(*piece);
 							board.checkFullRow(score);
 							updateGameInfo(piecesDropped, score);
-							piece.init();
+							randObject();
+							piece->init();
 						}
 					}
 				} 
 			} 
 
 			//If a piece has reached the bottom of the screen
-			if (board.checkBottomCollision(piece)) { 
+			if (board.checkBottomCollision(*piece)) { 
 
 				//If a bomb reached the bottom, detonate a 3x3 block (if exists) and remove the bomb off the board
-				if (piece.getType() == TetrisObject::Type::BOMB) {
-					board.detonate(piece.getBody(0).getX(), piece.getBody(0).getY(), score); 
-					piece.setBody(0, Point(piece.getBody(0).getX(), piece.getBody(0).getY(), ' '));
+				if (piece->getType() == TetrisObject::Type::BOMB) {
+					board.detonate(piece->getBody(0).getX(), piece->getBody(0).getY(), score);
+					piece->setBody(0, Point(piece->getBody(0).getX(), piece->getBody(0).getY(), ' '));
 				}
 
 				//Check game over on every bottom collision, else put the piece on the board, make a new piece and continue the game
 				if (!board.checkGameOver()) {
 					piecesDropped++;
-					board.update(piece);
-					piece.init();
+					board.update(*piece);
+					randObject();
+					piece->init();
 					board.checkFullRow(score);
 					updateGameInfo(piecesDropped, score);
 				} else
@@ -112,11 +116,11 @@ void Game::run() {
 			}
 
 			//Fix joker movement over pieces on the board
-			if (piece.getType() == TetrisObject::Type::JOKER)
-				board.fixJokerMove(piece);
+			if (piece->getType() == TetrisObject::Type::JOKER)
+				board.fixJokerMove(*piece);
 
 			//Draw the piece while it's moving
-			piece.draw();
+			piece->draw();
 
 			Sleep(sleepTime);
 		}
@@ -129,7 +133,7 @@ void Game::run() {
 
 		//If game is not paused, move the piece down
 		if (!isPaused) {
-			piece.move(Direction::DOWN);
+			piece->move(Direction::DOWN);
 		}
 
    } while (!exitFlag); 
@@ -202,4 +206,16 @@ void Game::updateGameInfo(int piecesDropped, int score) {
 	cout << piecesDropped << endl;
 	gotoxy(7, 1);
 	cout << score << "   " << endl;
+}
+
+//Generate random piece
+void Game::randObject(){
+	srand((unsigned int)time(NULL));
+	int randomNum = rand() % 7;
+	if (TetrisObject::Type::BOMB == randomNum)
+		piece = &bombPiece;
+	else if (TetrisObject::Type::JOKER == randomNum)
+		piece = &jokerPiece;
+	else
+		piece = &shapePiece;
 }

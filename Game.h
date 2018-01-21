@@ -6,19 +6,18 @@
 #include "TetrisObject.h"
 #include "TetrisShape.h"
 
+#include "TetrisBomb.h"
+#include "TetrisJoker.h"
+
 class Game {
 	enum { NUM_KEYS = 5 };
 
 	Board board;
-	//TetrisObject objects[7];
 
-	//TetrisShape LinePiece, SquarePiece, ZPiece, LPiece, PlusPiece;
 	TetrisShape shapePiece;
-	//TetrisObject piece;
-	//TetrisJoker JokerPiece;
-	//TetrisBomb BombPiece;
-
-	TetrisObject &piece = shapePiece;
+	TetrisJoker jokerPiece;
+	TetrisBomb bombPiece;
+	TetrisObject *piece = &jokerPiece;
 
 	char menuKeys[5];
 	char arrowKeys[5];
@@ -69,6 +68,8 @@ public:
 	int getMenuAction(char key);
 
 	void printGameInfo();
+
+	void randObject();
 };
 
 #endif

@@ -20,9 +20,6 @@ protected:
 	int size;
 
 public:
-	//TetrisObject() {
-	//	cout << "Nihao";
-	//}
 
 	virtual void init() {};
 

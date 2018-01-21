@@ -3,6 +3,7 @@
 
 //Init a piece
 void TetrisBomb::init() {
+	setType(TetrisObject::Type::BOMB);
 	size = 1;
 	rotates = false;
 	setColor(Color::LIGHTRED);
